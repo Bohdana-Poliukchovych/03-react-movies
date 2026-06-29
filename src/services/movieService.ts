@@ -1,6 +1,11 @@
 import axios from "axios";
+import type { Movie } from "../types/movie";
 
 const API_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
+
+interface MoviesResponse {
+  results: Movie[];
+}
 
 const api = axios.create({
   baseURL: "https://api.themoviedb.org/3",
@@ -9,13 +14,13 @@ const api = axios.create({
   },
 });
 
-export const getTrendingMovies = async () => {
-  const response = await api.get("/trending/movie/day");
+export const getTrendingMovies = async (): Promise<Movie[]> => {
+  const response = await api.get<MoviesResponse>("/trending/movie/day");
   return response.data.results;
 };
 
-export const searchMovies = async (query: string) => {
-  const response = await api.get("/search/movie", {
+export const searchMovies = async (query: string): Promise<Movie[]> => {
+  const response = await api.get<MoviesResponse>("/search/movie", {
     params: {
       query,
     },
